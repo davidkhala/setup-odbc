@@ -5,9 +5,15 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest, windows-latest, macos-latest]
+                version: [18, 17]
         runs-on: ${{ matrix.os }}
         steps:
-        - uses: actions/checkout@main
-        - uses: ./
-        
-    
+            - uses: actions/checkout@main
+            - uses: ./
+              with:
+                  version: ${{ matrix.version }}
+            - if: runner.os == 'Windows'
+              run: |
+                  iex (irm https://raw.githubusercontent.com/davidkhala/windows-utils/refs/heads/master/database/mssql.ps1)
+                  Test-ODBC -Version "${{ matrix.version }}"
+              shell: powershell

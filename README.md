@@ -1,13 +1,12 @@
-# davidkhala/new-action
-Github Action template
+# davidkhala/setup-odbc
+
+Action for installing ODBC drivers in Github Runner
 ## Use
 
 ```yaml
 steps:
 - uses: actions/checkout@main
-- uses: davidkhala/uv-buildpack@main
+- uses: davidkhala/setup-odbc@main
   with:
-    working-directory: . # directory path (dirname). Default to current directory
-    tests: tests # testing sources root directory.  Default `tests`
-    
+    version: "18" # odbc driver version. Default to 18
 ```

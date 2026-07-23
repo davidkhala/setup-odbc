@@ -1,30 +1,25 @@
-name: "davidkhala/new-action"
-description: 'new action description'
+name: "davidkhala/setup-odbc"
+description: 'Install ODBC driver in runner'
 
 branding:
-  icon: 'package' # find one in https://haya14busa.github.io/github-action-brandings/
-  color: 'purple' # one of ["white", "yellow", "blue", "green", "orange", "red", "purple", "gray-dark"]
+  icon: 'database'
+  color: 'blue'
 inputs:
-  tests:
-    description: 'Test Sources Root: working-directory of your tests'
+  version:
+    description: 'ODBC version to install'
     required: false
-    default: tests
-  working-directory:
-    description: 'action run path'
-    required: true
+    default: "18"
 runs:
   using: "composite"
   steps:
-  - if: ${{ inputs.tests != '' }}
-    run: echo tests
-    working-directory: ${{inputs.working-directory}}
-    shell: bash
   - if: runner.os == 'Linux'
-    run: sudo apt update
+    run: curl -fsSL https://raw.githubusercontent.com/davidkhala/ubuntu-utils/refs/heads/master/database/mssql/install.sh | bash -s odbc ${{ inputs.version }}
     shell: bash
   - if: runner.os == 'macOS'
-    run: brew update
+    run: curl -fsSL https://raw.githubusercontent.com/davidkhala/mac-utils/refs/heads/master/database/mssql/install.sh | bash -s odbc ${{ inputs.version }}
     shell: bash
   - if: runner.os == 'Windows'
-    run: choco upgrade chocolatey
+    run: |
+      iex (irm https://raw.githubusercontent.com/davidkhala/windows-utils/refs/heads/master/database/mssql.ps1)
+      Install-ODBC -Version "${{ inputs.version }}"
     shell: powershell
